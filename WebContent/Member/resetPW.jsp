@@ -16,7 +16,7 @@
     </div>
 
     <div class="member-card__body">
-      <form class="member-form" method="post" action="findPWProcess.jsp">
+      <form class="member-form" method="post" action="resetPWProcess.jsp">
         <div class="member-field">
           <label>아이디</label>
           <input class="member-input" type="text" name="user_id" required>
