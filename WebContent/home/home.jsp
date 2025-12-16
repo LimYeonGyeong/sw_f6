@@ -1,10 +1,14 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ include file="../base.jsp" %>
 
+<%@ page import="java.sql.*" %>
+<%@ page import="javax.naming.*" %>
+<%@ page import="javax.sql.DataSource" %>
+
 <style>
   /* 카드 영역 전체를 아래로 내림 */
   .movie-section{
-    margin-top: 120px; /* 더 내려오게 */
+    margin-top: 80px; /* 더 내려오게 */
   }
 
   /* 4장 묶음(전체 폭 88%: 카드 19%*4 + 간격 4%*3 = 88%) */
@@ -17,7 +21,7 @@
   }
 
   .movie-card{
-    width: 40%;
+    width: 19%;
     position: relative;
     cursor: pointer;
   }
@@ -64,70 +68,80 @@
   }
 
   .fixed-reserve-btn{
-  position: fixed;
-  right: 30px;
-  bottom: 30px;
-  padding: 14px 22px;
-  border: none;
-  border-radius: 30px;
-  font-size: 25px;
-  cursor: pointer;
-  z-index: 1000;
-}
-
-
+    position: fixed;
+    right: 30px;
+    bottom: 30px;
+    padding: 14px 22px;
+    border: none;
+    border-radius: 30px;
+    font-size: 20px;
+    cursor: pointer;
+    z-index: 1000;
+  }
 </style>
 
 <div class="movie-section">
+  <!-- ✅ 예매하기 버튼 -->
   <button class="fixed-reserve-btn"
-        onclick="location.href='<%=request.getContextPath()%>/sw_f6/WebContent/reserve/allMovieReserve.jsp'">
-  예매하기
+          onclick="location.href='<%=request.getContextPath()%>/reserve/allMovieReserve.jsp'">
+    예매하기
   </button>
 
   <div class="movie-row">
+    <%
+      String sql =
+        "SELECT movie_id, title, poster_url, age_rating, runtime, description " +
+        "FROM movie " +
+        "ORDER BY movie_id ASC " +
+        "LIMIT 4";
 
-    <div class="movie-card" onclick="location.href='<%=request.getContextPath()%>/sw_f6/WebContent/reserve/movieDetail.jsp?movie_id=1'">
+      try {
+        Context env = (Context) new InitialContext().lookup("java:comp/env");
+        DataSource ds = (DataSource) env.lookup("jdbc/movieDB");
 
-      <!-- ✅ 포스터가 없으면 아래 div로 바꿔 테스트 가능 -->
-      <img src="<%=request.getContextPath()%>/media/sample1.jpg" alt="movie">
-      <!-- <div class="poster-fallback">movie</div> -->
-      <div class="movie-info">
-        <h3>영화 제목 1</h3>
-        <p>등급: 12세</p>
-        <p>러닝타임: 120분</p>
-        <p>줄거리: 샘플</p>
+        try (Connection conn = ds.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+
+          while (rs.next()) {
+            int movieId = rs.getInt("movie_id");
+            String title = rs.getString("title");
+            String posterUrl = rs.getString("poster_url");     
+            String age = rs.getString("age_rating");
+            int runtime = rs.getInt("runtime");
+            String desc = rs.getString("description");
+
+            boolean hasPoster = (posterUrl != null && posterUrl.trim().length() > 0);
+    %>
+
+      <div class="movie-card"
+           onclick="location.href='<%=request.getContextPath()%>/reserve/movieDetail.jsp?movie_id=<%=movieId%>'">
+
+        <% if (hasPoster) { %>
+          <img src="<%=request.getContextPath() + posterUrl%>" alt="movie">
+        <% } else { %>
+          <div class="poster-fallback">movie</div>
+        <% } %>
+
+        <div class="movie-info">
+          <h3><%=title%></h3>
+          <p>등급: <%=age%></p>
+          <p>러닝타임: <%=runtime%>분</p>
+          <p>줄거리: <%= (desc == null ? "내용 없음" : desc) %></p>
+        </div>
       </div>
-    </div>
 
-    <div class="movie-card" onclick="location.href='<%=request.getContextPath()%>/sw_f6/WebContent/reserve/movieDetail.jsp?movie_id=2'">
-      <img src="<%=request.getContextPath()%>/media/sample2.jpg" alt="movie">
-      <div class="movie-info">
-        <h3>영화 제목 2</h3>
-        <p>등급: 전체</p>
-        <p>러닝타임: 98분</p>
-        <p>줄거리: 샘플</p>
+    <%
+          } // while
+        } // try-with-resources
+      } catch (Exception e) {
+    %>
+      <div style="width:88%; margin:0 auto; white-space:pre-wrap;">
+        DB 오류: <%= e.getClass().getName() %>
+        <%= e.getMessage() %>
       </div>
-    </div>
-
-    <div class="movie-card" onclick="location.href='<%=request.getContextPath()%>/sw_f6/WebContent/reserve/movieDetail.jsp?movie_id=3'">
-      <img src="<%=request.getContextPath()%>/media/sample3.jpg" alt="movie">
-      <div class="movie-info">
-        <h3>영화 제목 3</h3>
-        <p>등급: 15세</p>
-        <p>러닝타임: 110분</p>
-        <p>줄거리: 샘플</p>
-      </div>
-    </div>
-
-    <div class="movie-card" onclick="location.href='<%=request.getContextPath()%>/sw_f6/WebContent/reserve/movieDetail.jsp?movie_id=4'">
-      <img src="<%=request.getContextPath()%>/media/sample4.jpg" alt="movie">
-      <div class="movie-info">
-        <h3>영화 제목 4</h3>
-        <p>등급: 청불</p>
-        <p>러닝타임: 130분</p>
-        <p>줄거리: 샘플</p>
-      </div>
-    </div>
-
+    <%
+      }
+    %>
   </div>
 </div>
