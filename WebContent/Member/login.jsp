@@ -32,7 +32,7 @@
         <div class="member-links">
           <a href="signup.jsp">회원가입</a>
           <a href="findID.jsp">아이디 찾기</a>
-          <a href="findPW.jsp">비밀번호 재설정</a>
+          <a href="resetPW.jsp">비밀번호 재설정</a>
         </div>
       </form>
     </div>
