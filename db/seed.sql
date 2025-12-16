@@ -16,53 +16,14 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `movie`
---
-
-DROP TABLE IF EXISTS `movie`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `movie` (
-  `movie_id` int(11) NOT NULL AUTO_INCREMENT,
-  `title` varchar(200) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `poster_url` varchar(500) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `age_rating` varchar(20) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `runtime` int(11) DEFAULT NULL,
-  `description` text COLLATE utf8mb4_unicode_ci,
-  PRIMARY KEY (`movie_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
 -- Dumping data for table `movie`
 --
 
 LOCK TABLES `movie` WRITE;
 /*!40000 ALTER TABLE `movie` DISABLE KEYS */;
-INSERT INTO `movie` VALUES (1,'인터스텔라',NULL,'12',169,NULL),(2,'주토피아2',NULL,'All',108,NULL),(3,'데드풀과 울버린',NULL,'19',128,NULL),(4,'라라랜드',NULL,'12',128,NULL);
+INSERT INTO `movie` VALUES (1,'인터스텔라','/media/poster/interstellar.jpg','12',169,'인류의 생존을 위해 우주로 떠나는 탐사 이야기.'),(2,'주토피아2','/media/poster/zootopia2.jpg','All',108,'주토피아에서 벌어지는 새로운 사건을 해결하는 이야기.'),(3,'데드풀과 울버린','/media/poster/DeadpoolandWolverine.jpg','19',128,'데드풀과 울버린이 함께 휘말리는 액션 코미디.'),(4,'라라랜드','/media/poster/lalaland.jpg','12',128,'꿈을 좇는 두 사람이 사랑과 현실 사이에서 선택하는 이야기.');
 /*!40000 ALTER TABLE `movie` ENABLE KEYS */;
 UNLOCK TABLES;
-
---
--- Table structure for table `reservation`
---
-
-DROP TABLE IF EXISTS `reservation`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `reservation` (
-  `reservation_id` int(11) NOT NULL AUTO_INCREMENT,
-  `user_id` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `showtime_id` int(11) NOT NULL,
-  `reserved_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `status` varchar(20) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'CONFIRMED',
-  PRIMARY KEY (`reservation_id`),
-  KEY `idx_resv_user` (`user_id`),
-  KEY `idx_resv_showtime` (`showtime_id`),
-  CONSTRAINT `fk_resv_showtime` FOREIGN KEY (`showtime_id`) REFERENCES `showtime` (`showtime_id`) ON UPDATE CASCADE,
-  CONSTRAINT `fk_resv_user` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`) ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `reservation`
@@ -74,29 +35,6 @@ LOCK TABLES `reservation` WRITE;
 UNLOCK TABLES;
 
 --
--- Table structure for table `reserved_seat`
---
-
-DROP TABLE IF EXISTS `reserved_seat`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `reserved_seat` (
-  `reserved_seat_id` int(11) NOT NULL AUTO_INCREMENT,
-  `reservation_id` int(11) NOT NULL,
-  `seat_id` int(11) NOT NULL,
-  `showtime_id` int(11) NOT NULL,
-  PRIMARY KEY (`reserved_seat_id`),
-  UNIQUE KEY `uq_rs_unique` (`showtime_id`,`seat_id`),
-  KEY `fk_rs_seat` (`seat_id`),
-  KEY `idx_rs_resv` (`reservation_id`),
-  KEY `idx_rs_showtime` (`showtime_id`),
-  CONSTRAINT `fk_rs_reservation` FOREIGN KEY (`reservation_id`) REFERENCES `reservation` (`reservation_id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `fk_rs_seat` FOREIGN KEY (`seat_id`) REFERENCES `seat` (`seat_id`) ON UPDATE CASCADE,
-  CONSTRAINT `fk_rs_showtime` FOREIGN KEY (`showtime_id`) REFERENCES `showtime` (`showtime_id`) ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
 -- Dumping data for table `reserved_seat`
 --
 
@@ -106,49 +44,14 @@ LOCK TABLES `reserved_seat` WRITE;
 UNLOCK TABLES;
 
 --
--- Table structure for table `screen`
---
-
-DROP TABLE IF EXISTS `screen`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `screen` (
-  `screen_id` int(11) NOT NULL AUTO_INCREMENT,
-  `name` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `total_rows` int(11) NOT NULL,
-  `total_cols` int(11) NOT NULL,
-  PRIMARY KEY (`screen_id`),
-  UNIQUE KEY `uq_screen_name` (`name`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
 -- Dumping data for table `screen`
 --
 
 LOCK TABLES `screen` WRITE;
 /*!40000 ALTER TABLE `screen` DISABLE KEYS */;
-INSERT INTO `screen` VALUES (1,'1관',8,13),(2,'2관',8,13);
+INSERT INTO `screen` VALUES (1,'1관',8,13),(2,'2관',8,13),(3,'3관',8,13),(4,'4관',8,13);
 /*!40000 ALTER TABLE `screen` ENABLE KEYS */;
 UNLOCK TABLES;
-
---
--- Table structure for table `seat`
---
-
-DROP TABLE IF EXISTS `seat`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `seat` (
-  `seat_id` int(11) NOT NULL AUTO_INCREMENT,
-  `screen_id` int(11) NOT NULL,
-  `seat_row` varchar(5) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `seat_col` int(11) NOT NULL,
-  PRIMARY KEY (`seat_id`),
-  UNIQUE KEY `uq_seat_screen_pos` (`screen_id`,`seat_row`,`seat_col`),
-  CONSTRAINT `fk_seat_screen` FOREIGN KEY (`screen_id`) REFERENCES `screen` (`screen_id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=210 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `seat`
@@ -156,31 +59,9 @@ CREATE TABLE `seat` (
 
 LOCK TABLES `seat` WRITE;
 /*!40000 ALTER TABLE `seat` DISABLE KEYS */;
-INSERT INTO `seat` VALUES (2,1,'A',1),(3,1,'A',2),(4,1,'A',3),(5,1,'A',4),(6,1,'A',5),(7,1,'A',6),(8,1,'A',7),(9,1,'A',8),(10,1,'A',9),(11,1,'A',10),(12,1,'A',11),(13,1,'A',12),(14,1,'A',13),(15,1,'B',1),(16,1,'B',2),(17,1,'B',3),(18,1,'B',4),(19,1,'B',5),(20,1,'B',6),(21,1,'B',7),(22,1,'B',8),(23,1,'B',9),(24,1,'B',10),(25,1,'B',11),(26,1,'B',12),(27,1,'B',13),(28,1,'C',1),(29,1,'C',2),(30,1,'C',3),(31,1,'C',4),(32,1,'C',5),(33,1,'C',6),(34,1,'C',7),(35,1,'C',8),(36,1,'C',9),(37,1,'C',10),(38,1,'C',11),(39,1,'C',12),(40,1,'C',13),(41,1,'D',1),(42,1,'D',2),(43,1,'D',3),(44,1,'D',4),(45,1,'D',5),(46,1,'D',6),(47,1,'D',7),(48,1,'D',8),(49,1,'D',9),(50,1,'D',10),(51,1,'D',11),(52,1,'D',12),(53,1,'D',13),(54,1,'E',1),(55,1,'E',2),(56,1,'E',3),(57,1,'E',4),(58,1,'E',5),(59,1,'E',6),(60,1,'E',7),(61,1,'E',8),(62,1,'E',9),(63,1,'E',10),(64,1,'E',11),(65,1,'E',12),(66,1,'E',13),(67,1,'F',1),(68,1,'F',2),(69,1,'F',3),(70,1,'F',4),(71,1,'F',5),(72,1,'F',6),(73,1,'F',7),(74,1,'F',8),(75,1,'F',9),(76,1,'F',10),(77,1,'F',11),(78,1,'F',12),(79,1,'F',13),(80,1,'G',1),(81,1,'G',2),(82,1,'G',3),(83,1,'G',4),(84,1,'G',5),(85,1,'G',6),(86,1,'G',7),(87,1,'G',8),(88,1,'G',9),(89,1,'G',10),(90,1,'G',11),(91,1,'G',12),(92,1,'G',13),(93,1,'H',1),(94,1,'H',2),(95,1,'H',3),(96,1,'H',4),(97,1,'H',5),(98,1,'H',6),(99,1,'H',7),(100,1,'H',8),(101,1,'H',9),(102,1,'H',10),(103,1,'H',11),(104,1,'H',12),(105,1,'H',13),(106,2,'A',1),(107,2,'A',2),(108,2,'A',3),(109,2,'A',4),(110,2,'A',5),(111,2,'A',6),(112,2,'A',7),(113,2,'A',8),(114,2,'A',9),(115,2,'A',10),(116,2,'A',11),(117,2,'A',12),(118,2,'A',13),(119,2,'B',1),(120,2,'B',2),(121,2,'B',3),(122,2,'B',4),(123,2,'B',5),(124,2,'B',6),(125,2,'B',7),(126,2,'B',8),(127,2,'B',9),(128,2,'B',10),(129,2,'B',11),(130,2,'B',12),(131,2,'B',13),(132,2,'C',1),(133,2,'C',2),(134,2,'C',3),(135,2,'C',4),(136,2,'C',5),(137,2,'C',6),(138,2,'C',7),(139,2,'C',8),(140,2,'C',9),(141,2,'C',10),(142,2,'C',11),(143,2,'C',12),(144,2,'C',13),(145,2,'D',1),(146,2,'D',2),(147,2,'D',3),(148,2,'D',4),(149,2,'D',5),(150,2,'D',6),(151,2,'D',7),(152,2,'D',8),(153,2,'D',9),(154,2,'D',10),(155,2,'D',11),(156,2,'D',12),(157,2,'D',13),(158,2,'E',1),(159,2,'E',2),(160,2,'E',3),(161,2,'E',4),(162,2,'E',5),(163,2,'E',6),(164,2,'E',7),(165,2,'E',8),(166,2,'E',9),(167,2,'E',10),(168,2,'E',11),(169,2,'E',12),(170,2,'E',13),(171,2,'F',1),(172,2,'F',2),(173,2,'F',3),(174,2,'F',4),(175,2,'F',5),(176,2,'F',6),(177,2,'F',7),(178,2,'F',8),(179,2,'F',9),(180,2,'F',10),(181,2,'F',11),(182,2,'F',12),(183,2,'F',13),(184,2,'G',1),(185,2,'G',2),(186,2,'G',3),(187,2,'G',4),(188,2,'G',5),(189,2,'G',6),(190,2,'G',7),(191,2,'G',8),(192,2,'G',9),(193,2,'G',10),(194,2,'G',11),(195,2,'G',12),(196,2,'G',13),(197,2,'H',1),(198,2,'H',2),(199,2,'H',3),(200,2,'H',4),(201,2,'H',5),(202,2,'H',6),(203,2,'H',7),(204,2,'H',8),(205,2,'H',9),(206,2,'H',10),(207,2,'H',11),(208,2,'H',12),(209,2,'H',13);
+INSERT INTO `seat` VALUES (2,1,'A',1),(3,1,'A',2),(4,1,'A',3),(5,1,'A',4),(6,1,'A',5),(7,1,'A',6),(8,1,'A',7),(9,1,'A',8),(10,1,'A',9),(11,1,'A',10),(12,1,'A',11),(13,1,'A',12),(14,1,'A',13),(15,1,'B',1),(16,1,'B',2),(17,1,'B',3),(18,1,'B',4),(19,1,'B',5),(20,1,'B',6),(21,1,'B',7),(22,1,'B',8),(23,1,'B',9),(24,1,'B',10),(25,1,'B',11),(26,1,'B',12),(27,1,'B',13),(28,1,'C',1),(29,1,'C',2),(30,1,'C',3),(31,1,'C',4),(32,1,'C',5),(33,1,'C',6),(34,1,'C',7),(35,1,'C',8),(36,1,'C',9),(37,1,'C',10),(38,1,'C',11),(39,1,'C',12),(40,1,'C',13),(41,1,'D',1),(42,1,'D',2),(43,1,'D',3),(44,1,'D',4),(45,1,'D',5),(46,1,'D',6),(47,1,'D',7),(48,1,'D',8),(49,1,'D',9),(50,1,'D',10),(51,1,'D',11),(52,1,'D',12),(53,1,'D',13),(54,1,'E',1),(55,1,'E',2),(56,1,'E',3),(57,1,'E',4),(58,1,'E',5),(59,1,'E',6),(60,1,'E',7),(61,1,'E',8),(62,1,'E',9),(63,1,'E',10),(64,1,'E',11),(65,1,'E',12),(66,1,'E',13),(67,1,'F',1),(68,1,'F',2),(69,1,'F',3),(70,1,'F',4),(71,1,'F',5),(72,1,'F',6),(73,1,'F',7),(74,1,'F',8),(75,1,'F',9),(76,1,'F',10),(77,1,'F',11),(78,1,'F',12),(79,1,'F',13),(80,1,'G',1),(81,1,'G',2),(82,1,'G',3),(83,1,'G',4),(84,1,'G',5),(85,1,'G',6),(86,1,'G',7),(87,1,'G',8),(88,1,'G',9),(89,1,'G',10),(90,1,'G',11),(91,1,'G',12),(92,1,'G',13),(93,1,'H',1),(94,1,'H',2),(95,1,'H',3),(96,1,'H',4),(97,1,'H',5),(98,1,'H',6),(99,1,'H',7),(100,1,'H',8),(101,1,'H',9),(102,1,'H',10),(103,1,'H',11),(104,1,'H',12),(105,1,'H',13),(106,2,'A',1),(107,2,'A',2),(108,2,'A',3),(109,2,'A',4),(110,2,'A',5),(111,2,'A',6),(112,2,'A',7),(113,2,'A',8),(114,2,'A',9),(115,2,'A',10),(116,2,'A',11),(117,2,'A',12),(118,2,'A',13),(119,2,'B',1),(120,2,'B',2),(121,2,'B',3),(122,2,'B',4),(123,2,'B',5),(124,2,'B',6),(125,2,'B',7),(126,2,'B',8),(127,2,'B',9),(128,2,'B',10),(129,2,'B',11),(130,2,'B',12),(131,2,'B',13),(132,2,'C',1),(133,2,'C',2),(134,2,'C',3),(135,2,'C',4),(136,2,'C',5),(137,2,'C',6),(138,2,'C',7),(139,2,'C',8),(140,2,'C',9),(141,2,'C',10),(142,2,'C',11),(143,2,'C',12),(144,2,'C',13),(145,2,'D',1),(146,2,'D',2),(147,2,'D',3),(148,2,'D',4),(149,2,'D',5),(150,2,'D',6),(151,2,'D',7),(152,2,'D',8),(153,2,'D',9),(154,2,'D',10),(155,2,'D',11),(156,2,'D',12),(157,2,'D',13),(158,2,'E',1),(159,2,'E',2),(160,2,'E',3),(161,2,'E',4),(162,2,'E',5),(163,2,'E',6),(164,2,'E',7),(165,2,'E',8),(166,2,'E',9),(167,2,'E',10),(168,2,'E',11),(169,2,'E',12),(170,2,'E',13),(171,2,'F',1),(172,2,'F',2),(173,2,'F',3),(174,2,'F',4),(175,2,'F',5),(176,2,'F',6),(177,2,'F',7),(178,2,'F',8),(179,2,'F',9),(180,2,'F',10),(181,2,'F',11),(182,2,'F',12),(183,2,'F',13),(184,2,'G',1),(185,2,'G',2),(186,2,'G',3),(187,2,'G',4),(188,2,'G',5),(189,2,'G',6),(190,2,'G',7),(191,2,'G',8),(192,2,'G',9),(193,2,'G',10),(194,2,'G',11),(195,2,'G',12),(196,2,'G',13),(197,2,'H',1),(198,2,'H',2),(199,2,'H',3),(200,2,'H',4),(201,2,'H',5),(202,2,'H',6),(203,2,'H',7),(204,2,'H',8),(205,2,'H',9),(206,2,'H',10),(207,2,'H',11),(208,2,'H',12),(209,2,'H',13),(210,3,'A',1),(211,3,'A',2),(212,3,'A',3),(213,3,'A',4),(214,3,'A',5),(215,3,'A',6),(216,3,'A',7),(217,3,'A',8),(218,3,'A',9),(219,3,'A',10),(220,3,'A',11),(221,3,'A',12),(222,3,'A',13),(223,3,'B',1),(224,3,'B',2),(225,3,'B',3),(226,3,'B',4),(227,3,'B',5),(228,3,'B',6),(229,3,'B',7),(230,3,'B',8),(231,3,'B',9),(232,3,'B',10),(233,3,'B',11),(234,3,'B',12),(235,3,'B',13),(236,3,'C',1),(237,3,'C',2),(238,3,'C',3),(239,3,'C',4),(240,3,'C',5),(241,3,'C',6),(242,3,'C',7),(243,3,'C',8),(244,3,'C',9),(245,3,'C',10),(246,3,'C',11),(247,3,'C',12),(248,3,'C',13),(249,3,'D',1),(250,3,'D',2),(251,3,'D',3),(252,3,'D',4),(253,3,'D',5),(254,3,'D',6),(255,3,'D',7),(256,3,'D',8),(257,3,'D',9),(258,3,'D',10),(259,3,'D',11),(260,3,'D',12),(261,3,'D',13),(262,3,'E',1),(263,3,'E',2),(264,3,'E',3),(265,3,'E',4),(266,3,'E',5),(267,3,'E',6),(268,3,'E',7),(269,3,'E',8),(270,3,'E',9),(271,3,'E',10),(272,3,'E',11),(273,3,'E',12),(274,3,'E',13),(275,3,'F',1),(276,3,'F',2),(277,3,'F',3),(278,3,'F',4),(279,3,'F',5),(280,3,'F',6),(281,3,'F',7),(282,3,'F',8),(283,3,'F',9),(284,3,'F',10),(285,3,'F',11),(286,3,'F',12),(287,3,'F',13),(288,3,'G',1),(289,3,'G',2),(290,3,'G',3),(291,3,'G',4),(292,3,'G',5),(293,3,'G',6),(294,3,'G',7),(295,3,'G',8),(296,3,'G',9),(297,3,'G',10),(298,3,'G',11),(299,3,'G',12),(300,3,'G',13),(301,3,'H',1),(302,3,'H',2),(303,3,'H',3),(304,3,'H',4),(305,3,'H',5),(306,3,'H',6),(307,3,'H',7),(308,3,'H',8),(309,3,'H',9),(310,3,'H',10),(311,3,'H',11),(312,3,'H',12),(313,3,'H',13),(314,4,'A',1),(315,4,'A',2),(316,4,'A',3),(317,4,'A',4),(318,4,'A',5),(319,4,'A',6),(320,4,'A',7),(321,4,'A',8),(322,4,'A',9),(323,4,'A',10),(324,4,'A',11),(325,4,'A',12),(326,4,'A',13),(327,4,'B',1),(328,4,'B',2),(329,4,'B',3),(330,4,'B',4),(331,4,'B',5),(332,4,'B',6),(333,4,'B',7),(334,4,'B',8),(335,4,'B',9),(336,4,'B',10),(337,4,'B',11),(338,4,'B',12),(339,4,'B',13),(340,4,'C',1),(341,4,'C',2),(342,4,'C',3),(343,4,'C',4),(344,4,'C',5),(345,4,'C',6),(346,4,'C',7),(347,4,'C',8),(348,4,'C',9),(349,4,'C',10),(350,4,'C',11),(351,4,'C',12),(352,4,'C',13),(353,4,'D',1),(354,4,'D',2),(355,4,'D',3),(356,4,'D',4),(357,4,'D',5),(358,4,'D',6),(359,4,'D',7),(360,4,'D',8),(361,4,'D',9),(362,4,'D',10),(363,4,'D',11),(364,4,'D',12),(365,4,'D',13),(366,4,'E',1),(367,4,'E',2),(368,4,'E',3),(369,4,'E',4),(370,4,'E',5),(371,4,'E',6),(372,4,'E',7),(373,4,'E',8),(374,4,'E',9),(375,4,'E',10),(376,4,'E',11),(377,4,'E',12),(378,4,'E',13),(379,4,'F',1),(380,4,'F',2),(381,4,'F',3),(382,4,'F',4),(383,4,'F',5),(384,4,'F',6),(385,4,'F',7),(386,4,'F',8),(387,4,'F',9),(388,4,'F',10),(389,4,'F',11),(390,4,'F',12),(391,4,'F',13),(392,4,'G',1),(393,4,'G',2),(394,4,'G',3),(395,4,'G',4),(396,4,'G',5),(397,4,'G',6),(398,4,'G',7),(399,4,'G',8),(400,4,'G',9),(401,4,'G',10),(402,4,'G',11),(403,4,'G',12),(404,4,'G',13),(405,4,'H',1),(406,4,'H',2),(407,4,'H',3),(408,4,'H',4),(409,4,'H',5),(410,4,'H',6),(411,4,'H',7),(412,4,'H',8),(413,4,'H',9),(414,4,'H',10),(415,4,'H',11),(416,4,'H',12),(417,4,'H',13);
 /*!40000 ALTER TABLE `seat` ENABLE KEYS */;
 UNLOCK TABLES;
-
---
--- Table structure for table `showtime`
---
-
-DROP TABLE IF EXISTS `showtime`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `showtime` (
-  `showtime_id` int(11) NOT NULL AUTO_INCREMENT,
-  `movie_id` int(11) NOT NULL,
-  `screen_id` int(11) NOT NULL,
-  `start_time` datetime NOT NULL,
-  `remaining_seats` int(11) NOT NULL,
-  PRIMARY KEY (`showtime_id`),
-  KEY `fk_showtime_movie` (`movie_id`),
-  KEY `idx_showtime_start` (`start_time`),
-  KEY `idx_showtime_screen` (`screen_id`),
-  CONSTRAINT `fk_showtime_movie` FOREIGN KEY (`movie_id`) REFERENCES `movie` (`movie_id`) ON UPDATE CASCADE,
-  CONSTRAINT `fk_showtime_screen` FOREIGN KEY (`screen_id`) REFERENCES `screen` (`screen_id`) ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `showtime`
@@ -188,26 +69,9 @@ CREATE TABLE `showtime` (
 
 LOCK TABLES `showtime` WRITE;
 /*!40000 ALTER TABLE `showtime` DISABLE KEYS */;
-INSERT INTO `showtime` VALUES (2,2,1,'2025-12-20 10:00:00',104),(3,4,1,'2025-12-20 12:10:00',104),(4,2,1,'2025-12-20 14:40:00',104),(5,4,1,'2025-12-20 16:50:00',104),(6,3,2,'2025-12-20 10:00:00',104),(7,1,2,'2025-12-20 12:30:00',104),(8,3,2,'2025-12-20 15:40:00',104),(9,1,2,'2025-12-20 18:10:00',104);
+INSERT INTO `showtime` VALUES (10,2,1,'2025-12-20 09:30:00',104),(11,2,1,'2025-12-20 11:40:00',104),(12,2,1,'2025-12-20 13:50:00',104),(13,2,1,'2025-12-20 16:00:00',104),(14,4,2,'2025-12-20 11:00:00',104),(15,4,2,'2025-12-20 13:40:00',104),(16,4,2,'2025-12-20 16:20:00',104),(17,4,2,'2025-12-20 19:00:00',104),(18,3,3,'2025-12-20 12:00:00',104),(19,3,3,'2025-12-20 14:40:00',104),(20,3,3,'2025-12-20 17:20:00',104),(21,3,3,'2025-12-20 20:00:00',104),(22,1,4,'2025-12-20 09:00:00',104),(23,1,4,'2025-12-20 12:10:00',104),(24,1,4,'2025-12-20 15:20:00',104),(25,1,4,'2025-12-20 18:30:00',104);
 /*!40000 ALTER TABLE `showtime` ENABLE KEYS */;
 UNLOCK TABLES;
-
---
--- Table structure for table `users`
---
-
-DROP TABLE IF EXISTS `users`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `users` (
-  `user_id` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `password` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `name` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (`user_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `users`
@@ -215,7 +79,7 @@ CREATE TABLE `users` (
 
 LOCK TABLES `users` WRITE;
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
-INSERT INTO `users` VALUES ('alice','pass','Alice','2025-12-13 13:39:36','2025-12-14 01:56:47');
+INSERT INTO `users` VALUES ('alice','pass','Alice','2025-12-13 13:39:36','2025-12-14 01:56:47'),('yellow','1234','garam','2025-12-14 06:12:29','2025-12-14 06:12:03');
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -228,4 +92,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-12-14 12:27:47
+-- Dump completed on 2025-12-16 12:01:09
