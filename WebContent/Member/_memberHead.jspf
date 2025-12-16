@@ -1,0 +1,2 @@
+<link rel="stylesheet" href="<%=request.getContextPath()%>/css/member.css">
+<script defer src="<%=request.getContextPath()%>/js/member.js"></script>
