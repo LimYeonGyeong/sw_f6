@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Context>
+  <Resource name="jdbc/movieDB" auth="Container"
+            type="javax.sql.DataSource"
+            driverClassName="com.mysql.jdbc.Driver"
+            url="jdbc:mysql://localhost:3306/movie_booking?useSSL=false&amp;serverTimezone=Asia/Seoul&amp;characterEncoding=utf8"
+            username="user"
+            password="1122"
+            maxTotal="20" maxIdle="5" maxWaitMillis="10000"/>
+</Context>
